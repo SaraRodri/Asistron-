@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "609820329057",
+    "project_id": "asistron2",
+    "storage_bucket": "asistron2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:609820329057:android:259c95e5949fce02f45620",
+        "android_client_info": {
+          "package_name": "com.example.myapplication"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCx8W4JSjnatvqsgKtlcGDcKeu8ol4b-Ww"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
