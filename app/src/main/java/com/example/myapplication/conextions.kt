@@ -323,20 +323,8 @@ class Ver_semillero : ComponentActivity() {
         notifi_Menu.setOnClickListener {
             setContentView(R.layout.semillero_ejemplo)
         }
-    }
-}
+    }}
 
-
-class registroU: ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.iniciar_sesion)
-        val notifi_Menu = findViewById<Button>(R.id.registrou)
-        notifi_Menu.setOnClickListener {
-            setContentView(R.layout.registro_usuario)
-        }
-    }
-}
 
 class registroC: ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

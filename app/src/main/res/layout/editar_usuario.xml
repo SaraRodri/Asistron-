@@ -175,6 +175,7 @@
 
 
             <Button
+                android:id="@+id/guardarcambios"
                 android:onClick="Editarusuario"
                 android:layout_width="150dp"
                 android:layout_height="wrap_content"
