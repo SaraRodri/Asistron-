@@ -17,7 +17,11 @@ import androidx.activity.ComponentActivity
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.Query
 import com.google.firebase.database.ValueEventListener
+import kotlin.collections.HashMap
+import kotlin.collections.mapOf
+import kotlin.collections.set
 
 
 class MainActivity : ComponentActivity() {
@@ -25,11 +29,83 @@ class MainActivity : ComponentActivity() {
     val referencia = db.reference
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.presentacion)
+        setContentView(R.layout.inicio)
     }
+    fun inactivarHorario(view: View) {
+        val builder = AlertDialog.Builder(this)
+        val inflater = layoutInflater
+        val dialogLayout = inflater.inflate(R.layout.popup_inactivarhorario, null)
+        builder.setView(dialogLayout)
+        builder.setPositiveButton("Aceptar", DialogInterface.OnClickListener(function = inactivarH))
+        builder.setNegativeButton("Cancelar", DialogInterface.OnClickListener(function = negativeButtonClick))
+        builder.show()
 
+    }
+    val inactivarH  = {dialog: DialogInterface, which: Int ->
+        inactivarH()
+    }
+    fun inactivarH(){
+        val buscar = findViewById<EditText>(R.id.buscando).text.toString()
+        val bd = db.getReference("Horarios")
+        bd.orderByChild("nombre").equalTo(buscar).addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                    for (horarioSnapshot in snapshot.children) {
+                        val key: String = horarioSnapshot.key.toString()
+                        val compare = horarioSnapshot.child("nombre").getValue(String::class.java)
+                        if (compare == buscar){
+                            bd.child(key).child("estado").setValue("inactivo").addOnSuccessListener {
+                                Toast.makeText(applicationContext, "Horario inactivado correctamente", Toast.LENGTH_LONG).show()
+                                setContentView(R.layout.inicio)
+                            }.addOnFailureListener{
+                                Toast.makeText(applicationContext, "El horario no pudo ser inactivado", Toast.LENGTH_LONG).show()
+                                setContentView(R.layout.buscar_horario)
+                            }
+                    }
+                }}
+
+            override fun onCancelled(error: DatabaseError) {
+                Toast.makeText(applicationContext, "Error al consultar la base de datos", Toast.LENGTH_SHORT).show()
+            }
+        })}
+
+    fun inactivarGrupo(view: View) {
+        val builder = AlertDialog.Builder(this)
+        val inflater = layoutInflater
+        val dialogLayout = inflater.inflate(R.layout.popup_inactivarhorario, null)
+        builder.setView(dialogLayout)
+        builder.setPositiveButton("Aceptar", DialogInterface.OnClickListener(function = inactivarG))
+        builder.setNegativeButton("Cancelar", DialogInterface.OnClickListener(function = negativeButtonClick))
+        builder.show()
+
+    }
+    val inactivarG  = {dialog: DialogInterface, which: Int ->
+        inactivarG()
+    }
+    fun inactivarG(){
+        val buscar = findViewById<EditText>(R.id.buscar).text.toString()
+        val bd = db.getReference("Grupos")
+        bd.orderByChild("nombreGrupo").equalTo(buscar).addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                for (horarioSnapshot in snapshot.children) {
+                    val key: String = horarioSnapshot.key.toString()
+                    val compare = horarioSnapshot.child("nombreGrupo").getValue(String::class.java)
+                    if (compare == buscar){
+                        bd.child(key).child("estado").setValue("inactivo").addOnSuccessListener {
+                            Toast.makeText(applicationContext, "Grupo inactivado correctamente", Toast.LENGTH_LONG).show()
+                            setContentView(R.layout.inicio)
+                        }.addOnFailureListener{
+                            Toast.makeText(applicationContext, "El grupo no pudo ser inactivado", Toast.LENGTH_LONG).show()
+                            setContentView(R.layout.buscar_horario)
+                        }
+                    }
+                }}
+
+            override fun onCancelled(error: DatabaseError) {
+                Toast.makeText(applicationContext, "Error al consultar la base de datos", Toast.LENGTH_SHORT).show()
+            }
+        })}
     fun editarHorario(view: View) {
-        val buscando: String = "h"
+        val buscando: String = "nuevo"
         setContentView(R.layout.editar_horario)
 
         val nombreHorarioEditText = findViewById<EditText>(R.id.nombreHE)
@@ -85,7 +161,7 @@ class MainActivity : ComponentActivity() {
             val horaI = findViewById<EditText>(R.id.horaIHE).text.toString()
             val horaF = findViewById<EditText>(R.id.horaFHE).text.toString()
 
-            val horarioRef = referencia.child("Horarios").push()
+            val horarioRef = referencia.child("Horarios")
 
             val mapa = mapOf(
                 "nombre" to nombreHorario,
@@ -93,19 +169,27 @@ class MainActivity : ComponentActivity() {
                 "horaI" to horaI,
                 "horaF" to horaF
             )
-            horarioRef.updateChildren(mapa).addOnSuccessListener {
-                Log.d("RegisterHorarioActivity", "Horario actualizado exitosamente")
-                Toast.makeText(applicationContext, "Horario actualizado correctamente", Toast.LENGTH_LONG).show()
-                setContentView(R.layout.inicio)
-            }
-                .addOnFailureListener { e ->
-                    Log.e("RegisterHorarioActivity", "Error al actualizar horario: $e")
-                    Toast.makeText(applicationContext, "Fallo al actualizar el horario, intente de nuevo",
-                        Toast.LENGTH_LONG).show()
-                    setContentView(R.layout.editar_horario)
-                }
-        }
+            horarioRef.orderByChild("nombre").equalTo(buscando).addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    for (horarioSnapshot in snapshot.children) {
+                        val key: String = horarioSnapshot.key.toString()
+                        val compare = horarioSnapshot.child("nombreGrupo").getValue(String::class.java)
+                        if (compare == buscando){
+                            bd.child(key).setValue(mapa).addOnSuccessListener {
+                                Toast.makeText(applicationContext, "Grupo inactivado correctamente", Toast.LENGTH_LONG).show()
+                                setContentView(R.layout.inicio)
+                            }.addOnFailureListener{
+                                Toast.makeText(applicationContext, "El grupo no pudo ser inactivado", Toast.LENGTH_LONG).show()
+                                setContentView(R.layout.buscar_horario)
+                            }
+                        }
+                    }}
 
+                override fun onCancelled(error: DatabaseError) {
+                    Toast.makeText(applicationContext, "Error al consultar la base de datos", Toast.LENGTH_SHORT).show()
+                }
+            })
+        }
     }
 
     fun editarGrupo(view: View) {
@@ -182,8 +266,10 @@ class MainActivity : ComponentActivity() {
     fun verHorario(view: View){
         val diasTxt = findViewById<TextView>(R.id.dias)
         val horasTxt = findViewById<TextView>(R.id.horas)
+        val estadoTxt = findViewById<TextView>(R.id.estadoH)
         val buscarTxt = findViewById<EditText>(R.id.buscando)
         val buscar = buscarTxt.text.toString()
+
         buscarTxt.setText(buscar)
 
         val bd = db.getReference("Horarios")
@@ -191,15 +277,17 @@ class MainActivity : ComponentActivity() {
             override fun onDataChange(snapshot: DataSnapshot) {
                 if (snapshot.exists()) {
                     for (horarioSnapshot in snapshot.children) {
-                        var dias = horarioSnapshot.child("dias").getValue(String::class.java)
-                        var horaI = horarioSnapshot.child("horaI").getValue(String::class.java)
-                        var horaF = horarioSnapshot.child("horaF").getValue(String::class.java)
+                        val dias = horarioSnapshot.child("dias").getValue(String::class.java)
+                        val estado = horarioSnapshot.child("estado").getValue(String::class.java)
+                        val horaI = horarioSnapshot.child("horaI").getValue(String::class.java)
+                        val horaF = horarioSnapshot.child("horaF").getValue(String::class.java)
                         val horas = "Hora: " + horaI+ " a " + horaF
 
                         // Mostrar los datos en los TextView correspondientes
 
                         diasTxt.setText(dias)
                         horasTxt.setText(horas)
+                        estadoTxt.setText(estado)
 
                     }
                 } else {
@@ -220,6 +308,7 @@ class MainActivity : ComponentActivity() {
         val entrenadortxt = findViewById<TextView>(R.id.entrenadorGV)
         val horariotxt = findViewById<TextView>(R.id.horarioGV)
         val lugartxt = findViewById<TextView>(R.id.lugarGV)
+        val estadoTxt = findViewById<TextView>(R.id.estadoG)
         val buscarTxt = findViewById<EditText>(R.id.buscar)
         val buscar = buscarTxt.text.toString()
         buscarTxt.setText(buscar)
@@ -232,12 +321,14 @@ class MainActivity : ComponentActivity() {
                         val entrenador = grupoSnapshot.child("entrenador").getValue(String::class.java)
                         val horario = grupoSnapshot.child("horario").getValue(String::class.java)
                         val lugar = grupoSnapshot.child("lugar").getValue(String::class.java)
+                        val estado = grupoSnapshot.child("estado").getValue(String::class.java)
 
                         // Mostrar los datos en los TextView correspondientes
 
                         entrenadortxt.setText(entrenador)
                         horariotxt.setText(horario)
                         lugartxt.setText(lugar)
+                        estadoTxt.setText(estado)
 
                     }
                 } else {
@@ -305,7 +396,8 @@ class MainActivity : ComponentActivity() {
         "nombre" to nombreHorario,
         "dias" to dias,
         "horaI" to horaI,
-        "horaF" to horaF
+        "horaF" to horaF,
+        "estado" to "activo"
     )
 
     horarioRef.setValue(mapa).addOnSuccessListener {
@@ -333,7 +425,8 @@ class MainActivity : ComponentActivity() {
             "entrenador" to entrenador,
             "horarioG" to horarioG,
             "lugar" to lugar,
-            "integrantes" to integrantes
+            "integrantes" to integrantes,
+            "estado" to "activo"
         )
 
         grupoRef.setValue(mapita).addOnSuccessListener {
@@ -545,14 +638,6 @@ class MainActivity : ComponentActivity() {
         })
 
 
-    }
-
-    val positiveButtonClickCrearGrup = { dialog: DialogInterface, which: Int ->
-        val h = MainActivity()
-        //h.crearGrupo()
-        Toast.makeText(applicationContext,
-            android.R.string.yes, Toast.LENGTH_SHORT).show()
-        setContentView(R.layout.menu_grupo)
     }
 
     // Dany
