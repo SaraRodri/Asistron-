@@ -107,6 +107,79 @@ class MainActivity : ComponentActivity() {
 
     }
 
+    fun editarGrupo(view: View) {
+        val buscando: String = "nombre"
+        setContentView(R.layout.editar_grupo)
+
+        val nombreGrupoEditText = findViewById<EditText>(R.id.nombreGE)
+        val entrenadorTxt = findViewById<EditText>(R.id.entrenadorGE)
+        val horarioTxt = findViewById<EditText>(R.id.HorarioGE)
+        val lugarTxt = findViewById<EditText>(R.id.lugarGE)
+        val integrantesTxt = findViewById<Spinner>(R.id.spinner_integrantes)
+        val boton = findViewById<Button>(R.id.editarGrupo)
+        val bd = db.getReference("Horarios")
+
+        // Verificar si el usuario existe en la base de datos
+        bd.orderByChild("nombreGrupo").equalTo(buscando).addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                if (snapshot.exists()) {
+                    for (grupoSnapshot in snapshot.children) {
+                        val entrenador = grupoSnapshot.child("entrenador").getValue(String::class.java)
+                        val horario = grupoSnapshot.child("horario").getValue(String::class.java)
+                        val lugar = grupoSnapshot.child("lugar").getValue(String::class.java)
+                        val nombreGrupo = grupoSnapshot.child("nombreGrupo").getValue(String::class.java)
+                        val integrantes = grupoSnapshot.child("integrantes").getValue(String::class.java)
+
+
+                        entrenadorTxt.setText(entrenador)
+                        horarioTxt.setText(horario)
+                        lugarTxt.setText(lugar)
+                        nombreGrupoEditText.setText(nombreGrupo)
+                        //integrantesTxt.setText(integrantes)
+
+                    }
+                } else {
+                    // El usuario no existe
+                    Toast.makeText(applicationContext, "El grupo no existe", Toast.LENGTH_SHORT).show()
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                // Manejar el error de la consulta
+                Toast.makeText(applicationContext, "Error al consultar la base de datos", Toast.LENGTH_SHORT).show()
+            }
+        })
+        boton.setOnClickListener {
+            val nombreGrupo = findViewById<EditText>(R.id.nombreGE).text.toString()
+            val entrenador = findViewById<EditText>(R.id.entrenadorGE).text.toString()
+            val horarioG = findViewById<EditText>(R.id.HorarioGE).text.toString()
+            val lugar = findViewById<EditText>(R.id.lugarGE).text.toString()
+            val integrantes = findViewById<Spinner>(R.id.spinner_integrantes)
+
+            val horarioRef = referencia.child("Horarios").push()
+
+            val mapa = mapOf(
+                "nombreGrupo" to nombreGrupo,
+                "entrenador" to entrenador,
+                "horarioG" to horarioG,
+                "lugar" to lugar,
+                "integrantes" to integrantes
+            )
+            horarioRef.updateChildren(mapa).addOnSuccessListener {
+                Log.d("RegisterHorarioActivity", "Horario actualizado exitosamente")
+                Toast.makeText(applicationContext, "Horario actualizado correctamente", Toast.LENGTH_LONG).show()
+                setContentView(R.layout.inicio)
+            }
+                .addOnFailureListener { e ->
+                    Log.e("RegisterHorarioActivity", "Error al actualizar horario: $e")
+                    Toast.makeText(applicationContext, "Fallo al actualizar el horario, intente de nuevo",
+                        Toast.LENGTH_LONG).show()
+                    setContentView(R.layout.editar_horario)
+                }
+        }
+
+    }
+
     fun verHorario(view: View){
         val diasTxt = findViewById<TextView>(R.id.dias)
         val horasTxt = findViewById<TextView>(R.id.horas)
@@ -392,7 +465,7 @@ class MainActivity : ComponentActivity() {
         setContentView(R.layout.ver_grupo)
     }
     fun Cambiara_activo(view: View){
-        setContentView(R.layout.editar_grupo_inactivo)
+        setContentView(R.layout.editar_grupo)
     }
 
     // Saris
