@@ -118,7 +118,6 @@ class MainActivity : ComponentActivity() {
         val domChbx = findViewById<CheckBox>(R.id.DomE)
         val horaIEditText = findViewById<EditText>(R.id.horaIHE)
         val horaFEditText = findViewById<EditText>(R.id.horaFHE)
-        val boton = findViewById<Button>(R.id.editarHorario)
         val bd = db.getReference("Horarios")
 
         // Verificar si el usuario existe en la base de datos
@@ -154,43 +153,43 @@ class MainActivity : ComponentActivity() {
                 // Manejar el error de la consulta
                 Toast.makeText(applicationContext, "Error al consultar la base de datos", Toast.LENGTH_SHORT).show()
             }
-        })
-        boton.setOnClickListener {
-            val nombreHorario = findViewById<EditText>(R.id.nombreHE).text.toString()
-            val dias = diasE()
-            val horaI = findViewById<EditText>(R.id.horaIHE).text.toString()
-            val horaF = findViewById<EditText>(R.id.horaFHE).text.toString()
+        })}
+    fun updateHorario(view:View){
 
-            val horarioRef = referencia.child("Horarios")
+        // Actualizar los datos del usuario en la base de datos
+        val buscando: String = "nuevo"
+        val bd = db.getReference("Horarios")
+        val nombreHorario = findViewById<EditText>(R.id.nombreHE).text.toString()
+        val dias = diasE()
+        val horaI = findViewById<EditText>(R.id.horaIHE).text.toString()
+        val horaF = findViewById<EditText>(R.id.horaFHE).text.toString()
 
-            val mapa = mapOf(
-                "nombre" to nombreHorario,
-                "dias" to dias,
-                "horaI" to horaI,
-                "horaF" to horaF
-            )
-            horarioRef.orderByChild("nombre").equalTo(buscando).addListenerForSingleValueEvent(object : ValueEventListener {
+        val horarioRef = referencia.child("Horarios")
+
+
+        horarioRef.orderByChild("nombre").equalTo(buscando).addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     for (horarioSnapshot in snapshot.children) {
                         val key: String = horarioSnapshot.key.toString()
-                        val compare = horarioSnapshot.child("nombreGrupo").getValue(String::class.java)
-                        if (compare == buscando){
-                            bd.child(key).setValue(mapa).addOnSuccessListener {
-                                Toast.makeText(applicationContext, "Grupo inactivado correctamente", Toast.LENGTH_LONG).show()
+                            bd.child(key).child("nombre").setValue(nombreHorario)
+                            bd.child(key).child("dias").setValue(dias)
+                            bd.child(key).child("horaI").setValue(horaI)
+                            bd.child(key).child("horaF").setValue(horaF).addOnSuccessListener {
+                                Toast.makeText(applicationContext, "Horario editado correctamente", Toast.LENGTH_LONG).show()
                                 setContentView(R.layout.inicio)
                             }.addOnFailureListener{
-                                Toast.makeText(applicationContext, "El grupo no pudo ser inactivado", Toast.LENGTH_LONG).show()
+                                Toast.makeText(applicationContext, "El horario no pudo ser editado", Toast.LENGTH_LONG).show()
                                 setContentView(R.layout.buscar_horario)
                             }
-                        }
+
                     }}
 
-                override fun onCancelled(error: DatabaseError) {
+                override fun onCancelled(error:  DatabaseError) {
                     Toast.makeText(applicationContext, "Error al consultar la base de datos", Toast.LENGTH_SHORT).show()
                 }
             })
+
         }
-    }
 
     fun editarGrupo(view: View) {
         val buscando: String = "nombre"
@@ -200,9 +199,8 @@ class MainActivity : ComponentActivity() {
         val entrenadorTxt = findViewById<EditText>(R.id.entrenadorGE)
         val horarioTxt = findViewById<EditText>(R.id.HorarioGE)
         val lugarTxt = findViewById<EditText>(R.id.lugarGE)
-        val integrantesTxt = findViewById<Spinner>(R.id.spinner_integrantes)
-        val boton = findViewById<Button>(R.id.editarGrupo)
-        val bd = db.getReference("Horarios")
+        val integrantesTxt = findViewById<EditText>(R.id.integrantesE)
+        val bd = db.getReference("Grupos")
 
         // Verificar si el usuario existe en la base de datos
         bd.orderByChild("nombreGrupo").equalTo(buscando).addListenerForSingleValueEvent(object : ValueEventListener {
@@ -220,11 +218,10 @@ class MainActivity : ComponentActivity() {
                         horarioTxt.setText(horario)
                         lugarTxt.setText(lugar)
                         nombreGrupoEditText.setText(nombreGrupo)
-                        //integrantesTxt.setText(integrantes)
+                        integrantesTxt.setText(integrantes)
 
                     }
                 } else {
-                    // El usuario no existe
                     Toast.makeText(applicationContext, "El grupo no existe", Toast.LENGTH_SHORT).show()
                 }
             }
@@ -234,32 +231,44 @@ class MainActivity : ComponentActivity() {
                 Toast.makeText(applicationContext, "Error al consultar la base de datos", Toast.LENGTH_SHORT).show()
             }
         })
-        boton.setOnClickListener {
-            val nombreGrupo = findViewById<EditText>(R.id.nombreGE).text.toString()
-            val entrenador = findViewById<EditText>(R.id.entrenadorGE).text.toString()
-            val horarioG = findViewById<EditText>(R.id.HorarioGE).text.toString()
-            val lugar = findViewById<EditText>(R.id.lugarGE).text.toString()
-            val integrantes = findViewById<Spinner>(R.id.spinner_integrantes)
 
-            val horarioRef = referencia.child("Horarios").push()
+    }
 
-            val mapa = mapOf(
-                "nombreGrupo" to nombreGrupo,
-                "entrenador" to entrenador,
-                "horarioG" to horarioG,
-                "lugar" to lugar,
-                "integrantes" to integrantes
-            )
-            horarioRef.updateChildren(mapa).addOnSuccessListener {
-                Toast.makeText(applicationContext, "Grupo actualizado correctamente", Toast.LENGTH_LONG).show()
-                setContentView(R.layout.inicio)
+    fun updateGrupo(view:View){
+        val buscando: String = "nuevo"
+        val nombreGrupo = findViewById<EditText>(R.id.nombreGE)
+        val entrenador = findViewById<EditText>(R.id.entrenadorGE)
+        val horario = findViewById<EditText>(R.id.HorarioGE)
+        val lugar = findViewById<EditText>(R.id.lugarGE)
+        val integrantes = findViewById<EditText>(R.id.integrantesE)
+
+        val bd = db.getReference("Grupos")
+
+        val horarioRef = referencia.child("Grupos")
+
+
+        horarioRef.orderByChild("nombreGrupo").equalTo(buscando).addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                for (horarioSnapshot in snapshot.children) {
+                    val key: String = horarioSnapshot.key.toString()
+                    bd.child(key).child("nombreGrupo").setValue(nombreGrupo)
+                    bd.child(key).child("entrenador").setValue(entrenador)
+                    bd.child(key).child("horario").setValue(horario)
+                    bd.child(key).child("lugar").setValue(lugar)
+                    bd.child(key).child("integrantes").setValue(integrantes).addOnSuccessListener {
+                        Toast.makeText(applicationContext, "Grupo editado correctamente", Toast.LENGTH_LONG).show()
+                        setContentView(R.layout.inicio)
+                    }.addOnFailureListener{
+                        Toast.makeText(applicationContext, "El grupo no pudo ser editado", Toast.LENGTH_LONG).show()
+                        setContentView(R.layout.buscar_horario)
+                    }
+
+                }}
+
+            override fun onCancelled(error:  DatabaseError) {
+                Toast.makeText(applicationContext, "Error al consultar la base de datos", Toast.LENGTH_SHORT).show()
             }
-                .addOnFailureListener { e ->
-                    Toast.makeText(applicationContext, "Grupo al actualizar el horario, intente de nuevo",
-                        Toast.LENGTH_LONG).show()
-                    setContentView(R.layout.editar_grupo)
-                }
-        }
+        })
 
     }
 
