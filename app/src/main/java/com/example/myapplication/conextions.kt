@@ -1,4 +1,4 @@
-package com.example.myapplication
+package com.example.asistron
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import android.widget.LinearLayout

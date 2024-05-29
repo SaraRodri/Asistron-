@@ -1,4 +1,4 @@
-package com.example.myapplication.com.example.myapplication
+package com.example.asistron
 
 import android.os.Bundle
 import android.widget.ImageView
@@ -6,7 +6,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import com.google.firebase.database.*
-import com.example.myapplication.R
+import com.example.asistron.R
 
 class VerPerfilActivity : ComponentActivity() {
 

@@ -1,4 +1,4 @@
-package com.example.myapplication
+package com.example.asistron
 import android.content.Intent
 import androidx.activity.ComponentActivity
 import com.google.firebase.database.FirebaseDatabase
@@ -12,9 +12,9 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import android.widget.Toast
-import com.example.myapplication.BackUser
-import com.example.myapplication.GoToMenu
-import com.example.myapplication.R
+import com.example.asistron.BackUser
+import com.example.asistron.GoToMenu
+import com.example.asistron.R
 import org.json.JSONObject
 
 class RegisterHorarioActivity : ComponentActivity() {

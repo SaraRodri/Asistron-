@@ -1,4 +1,4 @@
-package com.example.myapplication
+package com.example.asistron
 
 import android.app.AlertDialog
 import android.os.Bundle
@@ -8,6 +8,7 @@ import android.widget.Spinner
 import androidx.activity.ComponentActivity
 import android.content.DialogInterface
 import android.widget.Toast
+import com.example.asistron.R
 
 class InicioActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
