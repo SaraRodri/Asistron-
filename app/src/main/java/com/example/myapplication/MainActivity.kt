@@ -104,11 +104,16 @@ class MainActivity : ComponentActivity() {
                 Toast.makeText(applicationContext, "Error al consultar la base de datos", Toast.LENGTH_SHORT).show()
             }
         })}
-    fun editarHorario(view: View) {
-        val buscando: String = "nuevo"
+
+    fun viewEditarHorario(view: View){
+        val buscando = findViewById<EditText>(R.id.buscando).text.toString()
+        editarHorario(buscando)
+    }
+    fun editarHorario(buscando:String) {
+        //val buscando = findViewById<EditText>(R.id.buscando).text.toString()
         setContentView(R.layout.editar_horario)
 
-        val nombreHorarioEditText = findViewById<EditText>(R.id.nombreHE)
+        val nombreHorarioEditText = findViewById<TextView>(R.id.nombreHE)
         val lunChbx = findViewById<CheckBox>(R.id.LunE)
         val marChbx = findViewById<CheckBox>(R.id.MarE)
         val mieChbx = findViewById<CheckBox>(R.id.MieE)
@@ -157,7 +162,6 @@ class MainActivity : ComponentActivity() {
     fun updateHorario(view:View){
 
         // Actualizar los datos del usuario en la base de datos
-        val buscando: String = "nuevo"
         val bd = db.getReference("Horarios")
         val nombreHorario = findViewById<EditText>(R.id.nombreHE).text.toString()
         val dias = diasE()
@@ -167,10 +171,10 @@ class MainActivity : ComponentActivity() {
         val horarioRef = referencia.child("Horarios")
 
 
-        horarioRef.orderByChild("nombre").equalTo(buscando).addListenerForSingleValueEvent(object : ValueEventListener {
+        horarioRef.orderByChild("nombre").equalTo(nombreHorario).addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     for (horarioSnapshot in snapshot.children) {
-                        val key: String = horarioSnapshot.key.toString()
+                            val key: String = horarioSnapshot.key.toString()
                             bd.child(key).child("nombre").setValue(nombreHorario)
                             bd.child(key).child("dias").setValue(dias)
                             bd.child(key).child("horaI").setValue(horaI)
@@ -191,11 +195,14 @@ class MainActivity : ComponentActivity() {
 
         }
 
-    fun editarGrupo(view: View) {
-        val buscando: String = "nombre"
+    fun viewEditarGrupo(view: View){
+        val buscando = findViewById<EditText>(R.id.buscar).text.toString()
+        editarGrupo(buscando)
+    }
+    fun editarGrupo(buscando: String) {
         setContentView(R.layout.editar_grupo)
 
-        val nombreGrupoEditText = findViewById<EditText>(R.id.nombreGE)
+        val nombreGrupoEditText = findViewById<TextView>(R.id.nombreGE)
         val entrenadorTxt = findViewById<EditText>(R.id.entrenadorGE)
         val horarioTxt = findViewById<EditText>(R.id.HorarioGE)
         val lugarTxt = findViewById<EditText>(R.id.lugarGE)
@@ -235,8 +242,7 @@ class MainActivity : ComponentActivity() {
     }
 
     fun updateGrupo(view:View){
-        val buscando: String = "nuevo"
-        val nombreGrupo = findViewById<EditText>(R.id.nombreGE)
+        val buscando  = findViewById<TextView>(R.id.nombreGE).text.toString()
         val entrenador = findViewById<EditText>(R.id.entrenadorGE)
         val horario = findViewById<EditText>(R.id.HorarioGE)
         val lugar = findViewById<EditText>(R.id.lugarGE)
@@ -244,14 +250,14 @@ class MainActivity : ComponentActivity() {
 
         val bd = db.getReference("Grupos")
 
-        val horarioRef = referencia.child("Grupos")
+        val grupoRef = referencia.child("Grupos")
 
 
-        horarioRef.orderByChild("nombreGrupo").equalTo(buscando).addListenerForSingleValueEvent(object : ValueEventListener {
+        grupoRef.orderByChild("nombreGrupo").equalTo(buscando).addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 for (horarioSnapshot in snapshot.children) {
                     val key: String = horarioSnapshot.key.toString()
-                    bd.child(key).child("nombreGrupo").setValue(nombreGrupo)
+                    bd.child(key).child("nombreGrupo").setValue(buscando)
                     bd.child(key).child("entrenador").setValue(entrenador)
                     bd.child(key).child("horario").setValue(horario)
                     bd.child(key).child("lugar").setValue(lugar)
@@ -291,7 +297,6 @@ class MainActivity : ComponentActivity() {
                         val horaI = horarioSnapshot.child("horaI").getValue(String::class.java)
                         val horaF = horarioSnapshot.child("horaF").getValue(String::class.java)
                         val horas = "Hora: " + horaI+ " a " + horaF
-
                         // Mostrar los datos en los TextView correspondientes
 
                         diasTxt.setText(dias)

@@ -50,6 +50,7 @@
             android:hint="Lunes"
             android:gravity="center"/>
         <Button
+            android:id="@+id/buscar"
             android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="30dp"
@@ -127,10 +128,10 @@
                 <Button
                     android:id="@+id/editarHorario"
                     android:layout_width="150dp"
-                    android:onClick="editarHorario"
                     android:layout_height="wrap_content"
                     android:background="@drawable/borde_redondo_boton"
                     android:text="Editar"
+                    android:onClick="viewEditarHorario"
                     android:textColor="@android:color/white"/>
             </LinearLayout>
 
