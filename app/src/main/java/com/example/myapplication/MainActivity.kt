@@ -753,9 +753,6 @@ class MainActivity : ComponentActivity() {
     fun Buscar_Grupo(view: View){
         setContentView(R.layout.buscar_grupo)
     }
-    fun Ver_Grupo(view: View){
-        setContentView(R.layout.ver_grupo)
-    }
     fun Cambiara_activo(view: View){
         setContentView(R.layout.editar_grupo)
     }
