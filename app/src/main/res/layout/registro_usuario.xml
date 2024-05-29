@@ -228,7 +228,7 @@
 
                 <Button
                     android:id="@+id/cancelarcontra"
-                    android:onClick="Registrousuario_menusuario"
+                    android:onClick="volver_menusuario"
                     android:layout_width="120dp"
                     android:layout_height="50dp"
                     android:layout_gravity="right"

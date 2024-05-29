@@ -107,6 +107,7 @@
                     android:layout_width="175dp"
                     android:layout_height="wrap_content"
                     android:gravity="center"
+                    android:textSize="18dp"
                     android:text=""
                     android:textColor="#000000" />
                 </LinearLayout>
@@ -145,7 +146,7 @@
 
             <Button
                 android:id="@+id/volver_noti"
-                android:onClick="Volvermenu_noti"
+                android:onClick="horarioc_volver"
                 android:layout_width="150dp"
                 android:layout_height="wrap_content"
                 android:background="@drawable/borde_redondo_boton"

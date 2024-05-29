@@ -29,7 +29,7 @@ class MainActivity : ComponentActivity() {
     val referencia = db.reference
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.inicio)
+        setContentView(R.layout.presentacion)
     }
     fun inactivarHorario(view: View) {
         val builder = AlertDialog.Builder(this)
@@ -175,7 +175,6 @@ class MainActivity : ComponentActivity() {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     for (horarioSnapshot in snapshot.children) {
                             val key: String = horarioSnapshot.key.toString()
-                            bd.child(key).child("nombre").setValue(nombreHorario)
                             bd.child(key).child("dias").setValue(dias)
                             bd.child(key).child("horaI").setValue(horaI)
                             bd.child(key).child("horaF").setValue(horaF).addOnSuccessListener {
@@ -215,7 +214,7 @@ class MainActivity : ComponentActivity() {
                 if (snapshot.exists()) {
                     for (grupoSnapshot in snapshot.children) {
                         val entrenador = grupoSnapshot.child("entrenador").getValue(String::class.java)
-                        val horario = grupoSnapshot.child("horario").getValue(String::class.java)
+                        val horario = grupoSnapshot.child("horarioG").getValue(String::class.java)
                         val lugar = grupoSnapshot.child("lugar").getValue(String::class.java)
                         val nombreGrupo = grupoSnapshot.child("nombreGrupo").getValue(String::class.java)
                         val integrantes = grupoSnapshot.child("integrantes").getValue(String::class.java)
@@ -243,10 +242,10 @@ class MainActivity : ComponentActivity() {
 
     fun updateGrupo(view:View){
         val buscando  = findViewById<TextView>(R.id.nombreGE).text.toString()
-        val entrenador = findViewById<EditText>(R.id.entrenadorGE)
-        val horario = findViewById<EditText>(R.id.HorarioGE)
-        val lugar = findViewById<EditText>(R.id.lugarGE)
-        val integrantes = findViewById<EditText>(R.id.integrantesE)
+        val entrenador = findViewById<EditText>(R.id.entrenadorGE).text.toString()
+        val horario = findViewById<EditText>(R.id.HorarioGE).text.toString()
+        val lugar = findViewById<EditText>(R.id.lugarGE).text.toString()
+        val integrantes = findViewById<EditText>(R.id.integrantesE).text.toString()
 
         val bd = db.getReference("Grupos")
 
@@ -257,9 +256,8 @@ class MainActivity : ComponentActivity() {
             override fun onDataChange(snapshot: DataSnapshot) {
                 for (horarioSnapshot in snapshot.children) {
                     val key: String = horarioSnapshot.key.toString()
-                    bd.child(key).child("nombreGrupo").setValue(buscando)
                     bd.child(key).child("entrenador").setValue(entrenador)
-                    bd.child(key).child("horario").setValue(horario)
+                    bd.child(key).child("horarioG").setValue(horario)
                     bd.child(key).child("lugar").setValue(lugar)
                     bd.child(key).child("integrantes").setValue(integrantes).addOnSuccessListener {
                         Toast.makeText(applicationContext, "Grupo editado correctamente", Toast.LENGTH_LONG).show()
@@ -333,7 +331,7 @@ class MainActivity : ComponentActivity() {
                 if (snapshot.exists()) {
                     for (grupoSnapshot in snapshot.children) {
                         val entrenador = grupoSnapshot.child("entrenador").getValue(String::class.java)
-                        val horario = grupoSnapshot.child("horario").getValue(String::class.java)
+                        val horario = grupoSnapshot.child("horarioG").getValue(String::class.java)
                         val lugar = grupoSnapshot.child("lugar").getValue(String::class.java)
                         val estado = grupoSnapshot.child("estado").getValue(String::class.java)
 
@@ -911,6 +909,9 @@ class MainActivity : ComponentActivity() {
     }
     fun horarioc_volver(view: View){
         setContentView(R.layout.horario_menu)
+    }
+    fun volver_menusuario(view: View){
+        setContentView(R.layout.usuario_menu)
     }
 
     //Pop ups
