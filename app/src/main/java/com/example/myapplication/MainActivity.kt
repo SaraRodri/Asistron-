@@ -163,7 +163,7 @@ class MainActivity : ComponentActivity() {
 
         // Actualizar los datos del usuario en la base de datos
         val bd = db.getReference("Horarios")
-        val nombreHorario = findViewById<EditText>(R.id.nombreHE).text.toString()
+        val nombreHorario = findViewById<TextView>(R.id.nombreHE).text.toString()
         val dias = diasE()
         val horaI = findViewById<EditText>(R.id.horaIHE).text.toString()
         val horaF = findViewById<EditText>(R.id.horaFHE).text.toString()
